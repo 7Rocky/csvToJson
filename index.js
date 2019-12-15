@@ -1,47 +1,104 @@
 const csv = require('csv-parser');
 const fs = require('fs');
+const path = require('path');
 
 const INDENT_SPACES = 2;
 const INPUT_FORMAT = '.csv';
 const OUTPUT_FORMAT = '.json';
 
+const BACKGROUND_GREEN = '\u001b[42;1m';
+
 const COLOR_GREEN = '\033[0;32m';
 const COLOR_RED = '\033[0;31m';
-const COLOR_RESET = '\033[0m';
-  
-const handleError = error => error ? console.log(error) : null;
 
-const showError = message => console.log(`\n${COLOR_RED}ERROR: ${message}${COLOR_RESET}\n`);
+const RESET = '\033[0m';
 
-const showSuccess = message => console.log(`\n${COLOR_GREEN}SUCCESS: ${message}${COLOR_RESET}\n`);
+const jsonData = [];
 
-const showInfo = message => console.log(`\nINFO: ${message}\n`);
+let csvFilePath = process.argv[2];
+let time;
 
-const data = [];
+if (csvFilePath) {
+  csvFilePath = csvFilePath.trim();
 
-let inputFilePath = process.argv[2];
+  if (csvFilePath.endsWith(INPUT_FORMAT)) {
+    jsonFilePath = csvFilePath.replace(INPUT_FORMAT, OUTPUT_FORMAT);
 
-if (inputFilePath) {
-  inputFilePath = inputFilePath.trim();
+    time = Date.now();
 
-  if (inputFilePath.endsWith(INPUT_FORMAT)) {
-    outputFilePath = inputFilePath.replace(INPUT_FORMAT, OUTPUT_FORMAT);
+    fs.open(
+      jsonFilePath, 'w',
+      error => error ?
+        handleError(error) :
+        showSuccess(`Created file ${RESET}${BACKGROUND_GREEN} ${jsonFilePath} `)
+    );
 
-    fs.open(outputFilePath, 'w', error => error ? handleError(error) : showSuccess(`Created file ${outputFilePath}`));
-
-    fs.createReadStream(inputFilePath)
+    fs.createReadStream(csvFilePath)
       .pipe(csv())
-      .on('data', item => data.push(item))
-      .on('end', () => {
-        fs.appendFile(outputFilePath, JSON.stringify(data, null, INDENT_SPACES) + '\n', handleError);
-        showSuccess('End of conversion');
-        showInfo(`Your ${OUTPUT_FORMAT} file => ${__dirname}/${outputFilePath.slice(2)}`);
-      });
-      
+      .on('data', csvItem => jsonData.push(csvItem))
+      .on('end', () => appendDataToFile(jsonData, jsonFilePath));
+  
   } else {
     showError(`A ${INPUT_FORMAT} file must be specified for the conversion`);
   }
+
 } else {
   showError('No input file specified\n\nYou must use the following command:'); 
-  console.log('node index.js <inputFilePath>\n');
+  console.log('node index.js <csvFilePath>\n');
+}
+
+/**
+ * Takes data object and writes it in the specified file in JSON format
+ * @method appendDataToFile
+ * @param {Object} data
+ * @param {string} file
+ */
+function appendDataToFile(data, file) {
+  fs.appendFile(
+    file,
+    JSON.stringify(data, null, INDENT_SPACES) + '\n',
+    handleError
+  );
+  
+  showSuccess(`Ended conversion in ${RESET}${BACKGROUND_GREEN} ${Date.now() - time} ms `);
+  
+  showInfo(`Your ${OUTPUT_FORMAT} file => ${path.join(__dirname, file)}`);
+}
+
+/**
+ * If there is an error, it is displayed in console
+ * @method handleError
+ * @param {Object} error
+ */
+function handleError(error) {
+  if (error) {
+    console.log(error);
+  }
+}
+
+/**
+ * Displays a message with a preffix 'ERROR: ' in red color
+ * @method showError
+ * @param {string} message
+ */
+function showError(message) {
+  console.log(`\n${COLOR_RED}ERROR: ${message}${RESET}\n`);
+}
+
+/**
+ * Displays a message with a preffix 'SUCCESS: ' in green color
+ * @method showSuccess
+ * @param {string} message
+ */
+function showSuccess(message) {
+  console.log(`\n${COLOR_GREEN}SUCCESS: ${message}${RESET}\n`);
+}
+
+/**
+ * Displays a message with a preffix 'INFO: '
+ * @method showInfo
+ * @param {string} message
+ */
+function showInfo(message) {
+  console.log(`\nINFO: ${message}\n`);
 }

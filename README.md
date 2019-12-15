@@ -18,15 +18,15 @@ To run the application, yo must follow the following steps:
 * Copy your **.csv** file to `/csvToJson`
 * Use the following command: 
   ```
-  $ node index.js <inputFilePath>
+  $ node index.js <csvFilePath>
   ```
-  - Note: The argument `<inputFilePath>` is required. You can use a relative path, such as: `./your_file.csv` (recommended), or absolute path.
+  - Note: The argument `<csvFilePath>` is required. You must use a relative path, such as: `./your_file.csv`.
 
 ## Results
-Your data in **.csv** format will be converted to a **.json** file with the same filename an in the same directory.
+Your data in **.csv** format will be converted to a **.json** file with the same filename an in the same directory as the **.csv** file.
 
 In the repository you can find an example with
-*data.csv => data.json*
+_data.csv => data.json_
 
 ## Comments
 If you have any comments on the code, or problems using the application, I'll be glad to answer you.

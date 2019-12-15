@@ -2,7 +2,8 @@
   "author": "7Rocky",
   "dependencies": {
     "csv-parser": "^2.3.2",
-    "fs": "0.0.1-security"
+    "fs": "0.0.1-security",
+    "path": "^0.12.7"
   },
   "description": "Convert CSV files to JSON files",
   "license": "ISC",
