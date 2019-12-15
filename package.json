@@ -1,15 +1,16 @@
 {
-  "name": "csvtojson",
-  "version": "1.0.0",
-  "description": "Convert CSV files to JSON files",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Rocky",
-  "license": "ISC",
   "dependencies": {
     "csv-parser": "^2.3.2",
     "fs": "0.0.1-security"
-  }
+  },
+  "description": "Convert CSV files to JSON files",
+  "license": "ISC",
+  "main": "index.js",
+  "name": "csvtojson",
+  "repository": "https://github.com/7Rocky/csvToJson",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
 }
