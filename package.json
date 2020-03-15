@@ -10,7 +10,7 @@
   "description": "Convert CSV files to JSON files",
   "license": "ISC",
   "main": "index.js",
-  "name": "csvToJson",
+  "name": "csvtojson",
   "repository": "https://github.com/7Rocky/csvToJson",
   "version": "1.1.0"
 }
