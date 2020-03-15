@@ -54,6 +54,14 @@ if (csvFilePath) {
  * @param {string} file
  */
 function appendDataToFile(data, file) {
+  for (item of data) {
+    for (attr in item) {
+      if (!isNaN(Number(item[attr]))) {
+        item[attr] = Number(item[attr]);
+      }
+    }
+  }
+
   fs.appendFile(
     file,
     JSON.stringify(data, null, INDENT_SPACES) + '\n',
